@@ -1,3 +1,4 @@
+ONLINE:
 ["http://omg.submanga.com/pages/4/120/1205570b3/1.jpg",
 "http://omg.submanga.com/pages/4/120/1205570b3/2.jpg",
 "http://omg.submanga.com/pages/4/120/1205570b3/3.jpg",
@@ -15,7 +16,20 @@
 "http://omg.submanga.com/pages/4/120/1205570b3/15.jpg",
 "http://omg.submanga.com/pages/4/120/1205570b3/16.jpg",
 "http://omg.submanga.com/pages/4/120/1205570b3/17.jpg",
-*"http://omg.submanga.com/pages/4/120/1205570b3/18.jpg",
+"http://omg.submanga.com/pages/4/120/1205570b3/18.jpg",
 "http://omg.submanga.com/pages/4/120/1205570b3/19.jpg",
 "http://omg.submanga.com/pages/4/120/1205570b3/20.jpg",
 "http://omg.submanga.com/pages/4/120/1205570b3/21.jpg"]
+
+LOCAL:
+["img/ps1.jpg", 
+"img/ps2.jpg", 
+"img/ps3.jpg", 
+"img/pd4.jpg", 
+"img/ps5.jpg", 
+"img/pd6.jpg", 
+"img/ps7.jpg", 
+"img/ps8.jpg"]
+
+
+
