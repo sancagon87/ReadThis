@@ -32,4 +32,12 @@ LOCAL:
 "img/ps8.jpg"]
 
 
+iW -> iH
+W -> W*iH/iW
+
+
+
+
+
+
 

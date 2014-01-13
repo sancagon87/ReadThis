@@ -1,7 +1,9 @@
 (function ( $ ) {
 	$.fn.ReadThis = function(op) 
 	{
-		$("head").append("<style> .hidden{ display: none !important; visibility: hidden; z-index: -1;} .derecha, .relleno, .doble, .izquierda, .single{ position: absolute; } </style>");
+		var loadingURL = "http://www.factormetal.com/wp-content/plugins/google-calendar-widget/loading.gif";
+		var rellenoURL = "img/relleno_tile.jpg";
+		$("head").append("<style> .hidden{ display: none !important; visibility: hidden; z-index: -1;} .derecha, .relleno, .doble, .izquierda, .single{ position: absolute; -moz-user-select: none; -khtml-user-select: none; -webkit-user-select: none; -o-user-select: none;} img{-moz-user-select: none; -khtml-user-select: none; -webkit-user-select: none; -o-user-select: none;} .relleno{background-image:url('" + rellenoURL + "'); background.size:100%;}</style>");
 		
 		var opciones = $.extend({
 			//default
@@ -12,6 +14,7 @@
 			navegation: false,
 		}, op);
 		this.data("opciones", opciones);
+		this.data("fullscreen", false);
 		//FONDO
 		if(opciones.backround_img == undefined)
 		{
@@ -27,19 +30,35 @@
 		var OBJ = this;
 		
 		preCargar(this);
+		
+		//loading display
+		this.append("<div id='ReadThisLoader' style='position:absolute; background-color:#000;'><div id='RTLoutput'><p style='color:white; text-align:center; font-size: 20px; font-weight: bold;'></p><img src='" + loadingURL + "'></img></div></div>");
+		setUpLoader(this);
 		this.data("porcentage", 0);
 		this.data("timer", setInterval(function(){loader(OBJ);}, 200));
 		
 	};
+	function setUpLoader(OBJ)
+	{
+		$("#ReadThisLoader").css({
+			"width": OBJ.data("opciones").width,
+			"height": OBJ.data("opciones").height
+		});
+		$("#RTLoutput").css("margin-top", (OBJ.data("opciones").height - 128)/2);
+		$("#RTLoutput img").css({
+			"margin-left": (OBJ.data("opciones").width - $("#RTLoutput img").width())/2
+		});
+	}
 	function loader(OBJ)
 	{
 		var largo = OBJ.data("opciones").array.length;
 		if(OBJ.data("porcentage") < largo)
 		{
-			$("#output").text("Cargando: " + Math.round((100/largo)*OBJ.data("porcentage")) + "%");
+			$("#RTLoutput p").text("Cargando: " + Math.round((100/largo)*OBJ.data("porcentage")) + "%");
 		} else {
-			$("#output").text("Carga terminada: " + 100 + "%");
+			$("#RTLoutput p").text("Carga terminada: " + 100 + "%");
 			clearInterval(OBJ.data("timer"));
+			$("#ReadThisLoader").addClass("hidden");
 			if( OBJ.data("opciones").pages == "single" )
 			{
 				setUpSingle(OBJ);
@@ -74,10 +93,15 @@
 		for(var i = 0; i < largo; i++)
 		{
 			OBJ.append("<div id='" + i + "' class='single hidden'></div>");
-			$("#" + i).append($(OBJ.data("imagenes")[i]));
+			$("#" + i).css({
+				"width":OBJ.data("imagenes")[i].width,
+				"heigth":OBJ.data("imagenes")[i].height,
+				"background-image":"url('" + OBJ.data("imagenes")[i].src + "')",
+				"background-size":"100%",
+			});
 		}
-		$("#ReadThis").contents().first().removeClass("hidden");
-		$("#ReadThis").contents().first().addClass("mostrar");
+		OBJ.contents("#0").removeClass("hidden");
+		OBJ.contents("#0").addClass("mostrar");
 		//AJUSTAR LOS TAMAÑOS DE LAS IMAGENES Y POSICIÓN
 		ajustarImagenes(OBJ);
 		//CREAR LISTENERS
@@ -136,11 +160,16 @@
 				derecha = true;
 				OBJ.append("<div id='" + i + "' class='izquierda hidden'></div>");
 			}
-			$("#" + i).append($(OBJ.data("imagenes")[i]));
+			$("#" + i).css({
+				"width":OBJ.data("imagenes")[i].width,
+				"heigth":OBJ.data("imagenes")[i].height,
+				"background-image":"url('" + OBJ.data("imagenes")[i].src + "')",
+				"background-size":"100%",
+			});
 		}
 
-		$("#ReadThis").contents().first().removeClass("hidden");
-		$("#ReadThis").contents().first().addClass("mostrar");
+		OBJ.contents("#0").removeClass("hidden");
+		OBJ.contents("#0").addClass("mostrar");
 		
 		//AJUSTAR LOS TAMAÑOS DE LAS IMAGENES Y POSICIÓN
 		ajustarImagenes(OBJ);
@@ -149,24 +178,22 @@
 	}
 	function ajustarImagenes( OBJ )
 	{
-		var aux = OBJ.contents().first();
+		var aux = OBJ.contents("#0");
 		var i = 0;
 		var auxW1, auxW2;
 		var W = OBJ.data("opciones").width;
 		var H = OBJ.data("opciones").height;
-		var Wreal, Hreal;
+		//var rellenoURL = "img/relleno.JPG";
+
 		
 		while( aux.length > 0 )
 		{	
 			if( (aux.hasClass("doble")) || (i == 0) || (aux.hasClass("single")) )
 			{
-				aux.contents("img").css("width", "");
-				aux.contents("img").css("height", "");
-				aux.contents("img").css("width", optimizarTamano(W, H, OBJ.data("imagenes")[i].width, OBJ.data("imagenes")[i].height));
+				auxW1 = optimizarTamano(W, H, OBJ.data("imagenes")[i].width, OBJ.data("imagenes")[i].height)
+				aux.css({"width":auxW1.w,"height":auxW1.h});
 				i++;
 			} else if( (aux.hasClass("izquierda")) ){
-				aux.contents("img").css("width", "");
-				aux.contents("img").css("height", "");
 				auxW1 = optimizarTamano(W, H, OBJ.data("imagenes")[i].width, OBJ.data("imagenes")[i].height);
 				if( aux.next().hasClass("relleno") )
 				{
@@ -176,21 +203,19 @@
 				} else {
 					if( aux.next().length > 0 )
 					{
-						aux.next().contents("img").css("width", "");
-						aux.next().contents("img").css("height", "");
 						auxW2 = optimizarTamano(W, H, OBJ.data("imagenes")[i+1].width, OBJ.data("imagenes")[i+1].height);
 						i++;
 					} else {
-						auxW2 = 0;
+						auxW2 = {W:0,h:0};
 					}
 				}
 				if( auxW1+auxW2 > W )
 				{
-					auxW1 = W/2;
-					auxW2 = W/2;
+					auxW1 = {w:W/2, h:H};
+					auxW2 = {w:W/2, h:H};
 				}
-				aux.contents("img").css("width", auxW1);
-				aux.next().contents("img").css("width", auxW2);
+				aux.css({"width":auxW1.w, "height":auxW1.h});
+				aux.next().css({"width":auxW2.w, "height":auxW2.h});
 				
 				i++;
 			}
@@ -211,7 +236,7 @@
 				});
 			} else if( $(this).hasClass("doble") || OBJ.data("opciones").pages == "single" ) {
 				$(this).css({
-					"left": (W-$(this).contents("img").width())/2,
+					"left": (W-$(this).width())/2,
 					//"top": (H-$(this).contents("img").height())/2
 				});
 			}
@@ -223,28 +248,62 @@
 		{
 			if( H*iW/iH > W )
 			{
-				return W;
+				return {w:W, h:Math.round(W*iH/iW)};
 			} else {
-				return Math.round(H*iW/iH);
+				return {w:Math.round(H*iW/iH), h:H};
 			}
 		} else {
 			if( iW > W )
 			{
-				return W;
+				return {w:W, h:Math.round(W*iH/iW)};
 			} else {
-				return iW;
+				return {w:iW, h:iH};
 			}
 		}
 	}
+	//LISTENERS
 	function crearListeners(OBJ)
 	{
-		OBJ.click(function(e) {
+		OBJ.dblclick(function(e) {
 			if(e.pageX >= (OBJ.width()/2))
 			{
 				OBJ.flipPage("right");
 			} else {
 				OBJ.flipPage("left");
 			}
+		});
+		$(document).keyup(function(e){
+			//alert(e.which);
+			switch(e.which){
+				case 37:	/* izquierda */
+					cambiar("left");
+					break;
+				case 39:	/* derecha */
+					cambiar("right");
+					break;
+				case 70:
+					if( OBJ.data("fullscreen") )
+					{
+						$.fullscreen.exit();
+					} else {
+						OBJ.fullscreen();
+					}
+					break;
+			}
+		});
+		$(document).bind("fscreenopen", function(e){
+			OBJ.data("swapW", OBJ.data("opciones").width);
+			OBJ.data("swapH", OBJ.data("opciones").height);
+			OBJ.data("opciones").width = $(window).width();
+			OBJ.data("opciones").height = $(window).height();
+							
+			ajustarImagenes(OBJ);
+		});
+		$(document).bind("fscreenclose", function(e){
+			OBJ.data("opciones").width = OBJ.data("swapW");
+			OBJ.data("opciones").height = OBJ.data("swapH");
+							
+			ajustarImagenes(OBJ);
 		});
 	}
 	$.fn.flipPage = function(dir)
@@ -280,9 +339,9 @@
 				this.contents(".mostrar").each(function(){$(this).addClass("hidden"); $(this).removeClass("mostrar");});
 				this.contents(".proximo").each(function(){$(this).addClass("mostrar");});
 				this.contents(".proximo").each(function(){$(this).removeClass("hidden"); $(this).removeClass("proximo");});
-			} else if( dir == "left" && (this.contents(".mostrar").first().attr("id") != 0) && !(this.contents(".mostrar").first().hasClass("relleno")) ) {
+			} else if( dir == "left" && (this.contents(".mostrar").first().attr("id") != 0) ) {
 				this.contents(".mostrar").first().prev().addClass("proximo");
-				if( !this.contents(".mostrar").first().prev().hasClass("doble") )
+				if( !this.contents(".mostrar").first().prev().hasClass("doble") && (this.contents(".mostrar").first().prev().attr("id") !=0) )
 				{
 					this.contents(".proximo").prev().addClass("proximo");
 				}
@@ -292,16 +351,4 @@
 			}
 		}
 	};
-	$.fn.ReadThisFullscreen = function()
-	{
-		this.fullscreen();
-		this.data("swapW", this.data("opciones").width);
-		this.data("swapH", this.data("opciones").height);
-		
-		this.data("opciones").width = $(window).width();
-		this.data("opciones").height = $(window).height();
-		
-		ajustarImagenes(this);
-		
-	}
 }( jQuery ));

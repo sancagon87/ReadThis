@@ -1,0 +1,11 @@
+v0.2 - Se implementa la funcion para cambiar de paginas hacia adelante y hacia atras, haciendo click sobre el viewport.
+v0.3 - Se implementa un preloader, para cargar las imagenes antes de hacer los calculos para colocarlas.
+		Se asigna el tamaño a las imagenes para que entren en el viewport y se las posicionan en su lugar correspondiente.
+v0.4 - Se crea un HUD para la carga de imagenes con el porcentage de imagenes cargadas y un gif de carga.
+		Se cambia la forma en que se muestran las imagenes, ahora se asignan las mismas como background-image de los divs correspondientes. 
+		(La funcion optimizarTamano devuelve ahora un objeto con el ancho y el alto optimos)
+		Se implementa el modo en pantalla completa (provisoriamente con la tecla "f").
+		Se agrega un archivo .gitignore al proyecto.
+		Fixes: Se corrige error en la funcion "flipPages".
+		
+		
