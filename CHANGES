@@ -1,14 +1,18 @@
 v0.2 - Se implementa la funcion para cambiar de paginas hacia adelante y hacia atras, haciendo click sobre el viewport.
+
 v0.3 - Se implementa un preloader, para cargar las imagenes antes de hacer los calculos para colocarlas.
 		Se asigna el tamaño a las imagenes para que entren en el viewport y se las posicionan en su lugar correspondiente.
+		
 v0.4 - Se crea un HUD para la carga de imagenes con el porcentage de imagenes cargadas y un gif de carga.
 		Se cambia la forma en que se muestran las imagenes, ahora se asignan las mismas como background-image de los divs correspondientes. 
 		(La funcion optimizarTamano devuelve ahora un objeto con el ancho y el alto optimos)
 		Se implementa el modo en pantalla completa (hotkey provisorio: "f").
 		Se agrega un archivo .gitignore al proyecto.
 		Fixes: Se corrige error en la funcion "flipPages".
+		
 v0.5 - Se implementa sistema de ZOOM (hotkeys provisorias: "1" = x1, "2" = x150, "3" = x200, "4" = x250, "z" = toogle)
 		Se implementa un panel de control con botones para activar/desactivar pantalla completa y zoom
-
 		
-		
+v1.0a - Primera version funcional del plugin (Aplpha).
+		Se implementa barra de progreso en el panel de control
+		Se implementa el cambio de modo de lectura (normal y manga), hotkey: "m"
