@@ -18,7 +18,7 @@
 			navegation: false,
 			zoom: true,
 			zoomlvl: 100,
-			modo: "normal"
+			mode: "normal"
 		}, op);
 		this.data("opciones", opciones);
 		this.data("fullscreen", false);
@@ -245,7 +245,7 @@
 		
 		//CENTRAR EN EL LADO CORRESPONDIENTE
 		OBJ.contents().each(function(){
-			if( OBJ.data("opciones").modo == "normal" )
+			if( OBJ.data("opciones").mode == "normal" )
 			{
 				if( $(this).hasClass("izquierda") ) {
 					$(this).css({
@@ -265,7 +265,7 @@
 						//"top": (H-$(this).contents("img").height())/2
 					});
 				}
-			} else if( OBJ.data("opciones").modo == "manga" ) {
+			} else if( OBJ.data("opciones").mode == "manga" ) {
 				if( $(this).hasClass("izquierda") ) {
 					$(this).css({
 						"left": W/2,
@@ -370,11 +370,11 @@
 					}
 					break;
 				case 77:
-					if( OBJ.data("opciones").modo == "normal" )
+					if( OBJ.data("opciones").mode == "normal" )
 					{
-						OBJ.data("opciones").modo = "manga";
+						OBJ.data("opciones").mode = "manga";
 					} else {
-						OBJ.data("opciones").modo = "normal";
+						OBJ.data("opciones").mode = "normal";
 					}
 					ajustarImagenes(OBJ);
 					break;
@@ -493,11 +493,11 @@
 		var rate = OBJ.data("opciones").zoomlvl/100;
 		var RTZ1, RTZ2;
 		
-		if( OBJ.data("opciones").modo == "normal" )
+		if( OBJ.data("opciones").mode == "normal" )
 		{
 			RTZ1 = $("#RTZ1");
 			RTZ2 = $("#RTZ2");
-		} else if( OBJ.data("opciones").modo == "manga" ) {
+		} else if( OBJ.data("opciones").mode == "manga" ) {
 			RTZ1 = $("#RTZ2");
 			RTZ2 = $("#RTZ1");
 		}
