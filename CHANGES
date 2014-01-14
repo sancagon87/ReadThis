@@ -4,8 +4,11 @@ v0.3 - Se implementa un preloader, para cargar las imagenes antes de hacer los c
 v0.4 - Se crea un HUD para la carga de imagenes con el porcentage de imagenes cargadas y un gif de carga.
 		Se cambia la forma en que se muestran las imagenes, ahora se asignan las mismas como background-image de los divs correspondientes. 
 		(La funcion optimizarTamano devuelve ahora un objeto con el ancho y el alto optimos)
-		Se implementa el modo en pantalla completa (provisoriamente con la tecla "f").
+		Se implementa el modo en pantalla completa (hotkey provisorio: "f").
 		Se agrega un archivo .gitignore al proyecto.
 		Fixes: Se corrige error en la funcion "flipPages".
+v0.5 - Se implementa sistema de ZOOM (hotkeys provisorias: "1" = x1, "2" = x150, "3" = x200, "4" = x250, "z" = toogle)
+		Se implementa un panel de control con botones para activar/desactivar pantalla completa y zoom
+
 		
 		
