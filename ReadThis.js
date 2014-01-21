@@ -21,10 +21,9 @@
 			height:400 
 			,width:800
 			,backround_color:'#000'
-			,pages: "single"
-			,navegation: false
+			,pages: "double"
 			,zoom: true
-			,mode: "normal"
+			,mode: "standard"
 		}, op);
 		this.data("opciones", opciones);
 		this.data("fullscreen", false);
@@ -265,7 +264,7 @@
 		
 		//CENTRAR EN EL LADO CORRESPONDIENTE
 		OBJ.contents().each(function(){
-			if( OBJ.data("opciones").mode == "normal" )
+			if( OBJ.data("opciones").mode == "standard" )
 			{
 				if( $(this).hasClass("izquierda") ) {
 					$(this).css({
@@ -346,10 +345,10 @@
 			//alert(e.which);
 			switch(e.which){
 				case 37:	/* izquierda */
-					cambiar("left");
+					OBJ.flipPage("left");
 					break;
 				case 39:	/* derecha */
-					cambiar("right");
+					OBJ.flipPage("right");
 					break;
 				case 70:	/* F */
 					OBJ.RTtoogleFS();
@@ -378,11 +377,11 @@
 					OBJ.RTtoogleZOOM();
 					break;
 				case 77:
-					if( OBJ.data("opciones").mode == "normal" )
+					if( OBJ.data("opciones").mode == "standard" )
 					{
 						OBJ.data("opciones").mode = "manga";
 					} else {
-						OBJ.data("opciones").mode = "normal";
+						OBJ.data("opciones").mode = "standard";
 					}
 					ajustarImagenes(OBJ);
 					break;
@@ -487,7 +486,7 @@
 		var rate = OBJ.data("zoomlvl")/100;
 		var RTZ1, RTZ2;
 		
-		if( OBJ.data("opciones").mode == "normal" )
+		if( OBJ.data("opciones").mode == "standard" )
 		{
 			RTZ1 = $("#RTZ1");
 			RTZ2 = $("#RTZ2");

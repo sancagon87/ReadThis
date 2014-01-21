@@ -2,12 +2,16 @@
 //https://github.com/sancagon87/ReadThis
 
 (function ( $ ) {
-	var loadingURL = "http://www.factormetal.com/wp-content/plugins/google-calendar-widget/loading.gif";
-	var rellenoURL = "img/relleno_tile.jpg";
-	var fscreenIcon = "http://sliderpro.net/wp-content/uploads/icons/fullscreen.png";
-	var zoomIcon = "img/zoomIcon.png";
-	var zoomlvlIcon = "img/arrow-downIcon.png";
-
+	var loadingURL = "http://imageshack.com/a/img801/8726/zt.gif";
+	var rellenoURL = "http://imageshack.com/a/img689/7615/fzi4.png";
+	var fscreenIcon = ["http://imageshack.com/a/img854/2462/ezam.png", "http://imageshack.com/a/img836/8787/uw7v.png"];
+	var zoomIcon = ["http://imageshack.com/a/img837/4233/7pwk.png", "http://imageshack.com/a/img819/8431/lbzu.png", "http://imageshack.com/a/img837/8485/a0xs.png", "http://imageshack.com/a/img268/8585/t970.png", "http://imageshack.com/a/img811/4599/su6h.png"];
+	var zoomOutIcon = "http://imageshack.com/a/img707/7807/310x.png";
+	var zoomInIcon = "http://imageshack.com/a/img35/492/ya18.png";
+	var zoomOutOffIcon = "http://imageshack.com/a/img17/4806/edn0.png";
+	var zoomInOffIcon = "http://imageshack.com/a/img819/4650/9wpq.png";
+	var iconos = [loadingURL,rellenoURL,fscreenIcon[0],fscreenIcon[1],zoomIcon[0],zoomIcon[1],zoomIcon[2],zoomIcon[3],zoomIcon[4],zoomOutIcon,zoomInIcon,zoomOutOffIcon,zoomInOffIcon];
+	
 	$.fn.ReadThis = function(op) 
 	{
 		$("head").append("<style> .hidden{ display: none !important; visibility: hidden; z-index: -1;} .derecha, .relleno, .doble, .izquierda, .single, #ReadThisZOOM{ position: absolute; -moz-user-select: none; -khtml-user-select: none; -webkit-user-select: none; -o-user-select: none;} .relleno{background-image:url('" + rellenoURL + "'); background.size:100%;}</style>");
@@ -17,14 +21,13 @@
 			height:400 
 			,width:800
 			,backround_color:'#000'
-			,pages: "single"
-			,navegation: false
+			,pages: "double"
 			,zoom: true
-			,zoomlvl: 100
-			,mode: "normal"
+			,mode: "standard"
 		}, op);
 		this.data("opciones", opciones);
 		this.data("fullscreen", false);
+		this.data("zoomlvl", 100);
 		//FONDO
 		if(opciones.backround_img == undefined)
 		{
@@ -36,9 +39,8 @@
 			,"width": opciones.width
 			,"position": "absolute"
 		});
-		
-		var OBJ = this;
-		
+
+		var OBJ = this;		
 		preCargar(this);
 		
 		//ZOOM DIV
@@ -65,7 +67,7 @@
 	}
 	function loader(OBJ)
 	{
-		var largo = OBJ.data("opciones").array.length;
+		var largo = OBJ.data("opciones").array.length + iconos.length;
 		if(OBJ.data("porcentage") < largo)
 		{
 			$("#RTLoutput p").text("Cargando: " + Math.round((100/largo)*OBJ.data("porcentage")) + "%");
@@ -85,9 +87,11 @@
 	function preCargar(OBJ)
 	{	
 		var img = new Array()
+		var iconosImg = new Array();
 		var largo = OBJ.data("opciones").array.length;
+		var largoIconos = iconos.length;
 		
-		for(var i = 0; i < largo; i++)
+		for( var i = 0; i < largo; i++ )
 		{
 			img[i] = new Image();
 
@@ -95,6 +99,18 @@
 				OBJ.data("porcentage", OBJ.data("porcentage") + 1);
 			}).attr({
 				src: OBJ.data("opciones").array[i]
+			}).error(function(){
+				alert("Error! No se puede cargar una imagen! Recargar la pagina!");
+			});
+		}
+		for( var i = 0; i < largoIconos; i++)
+		{
+			iconosImg[i] = new Image();
+			
+			$(iconosImg[i]).load(function(){
+				OBJ.data("porcentage", OBJ.data("porcentage") + 1);
+			}).attr({
+				src: iconos[i]
 			}).error(function(){
 				alert("Error! No se puede cargar una imagen! Recargar la pagina!");
 			});
@@ -248,7 +264,7 @@
 		
 		//CENTRAR EN EL LADO CORRESPONDIENTE
 		OBJ.contents().each(function(){
-			if( OBJ.data("opciones").mode == "normal" )
+			if( OBJ.data("opciones").mode == "standard" )
 			{
 				if( $(this).hasClass("izquierda") ) {
 					$(this).css({
@@ -335,49 +351,37 @@
 					cambiar("right");
 					break;
 				case 70:	/* F */
-					if( OBJ.data("fullscreen") )
-					{
-						$.fullscreen.exit();
-						OBJ.data("fullscreen", false);
-					} else {
-						OBJ.fullscreen();
-						OBJ.data("fullscreen", true);
-					}
+					OBJ.RTtoogleFS();
 					break;
 				case 49:	/* 1 */
-					OBJ.data("opciones").zoomlvl = 100;
+					OBJ.data("zoomlvl", 100);
+					$("#RTzoom").css("background-image", "url('" + zoomIcon[0] + "')");
 					setUpZOOM(OBJ);
 					break;
 				case 50:	/* 2 */
-					OBJ.data("opciones").zoomlvl = 150;
+					OBJ.data("zoomlvl", 150);
+					$("#RTzoom").css("background-image", "url('" + zoomIcon[1] + "')");
 					setUpZOOM(OBJ);
 					break
 				case 51:	/* 3 */
-					OBJ.data("opciones").zoomlvl = 200;
+					OBJ.data("zoomlvl",200);
+					$("#RTzoom").css("background-image", "url('" + zoomIcon[2] + "')");
 					setUpZOOM(OBJ);
 					break;
 				case 52:	/* 4 */
-					OBJ.data("opciones").zoomlvl = 300;
+					OBJ.data("zoomlvl",250);
+					$("#RTzoom").css("background-image", "url('" + zoomIcon[3] + "')");
 					setUpZOOM(OBJ);
 					break;
 				case 90:	/* Z */
-					if( OBJ.data("opciones").zoom )
-					{
-						OBJ.data("opciones").zoom = false;
-						if( !$("#ReadThisZOOM").hasClass("hidden") )
-						{
-							$("#ReadThisZOOM").addClass("hidden");
-						}
-					} else {
-						OBJ.data("opciones").zoom = true;
-					}
+					OBJ.RTtoogleZOOM();
 					break;
 				case 77:
-					if( OBJ.data("opciones").mode == "normal" )
+					if( OBJ.data("opciones").mode == "standard" )
 					{
 						OBJ.data("opciones").mode = "manga";
 					} else {
-						OBJ.data("opciones").mode = "normal";
+						OBJ.data("opciones").mode = "standard";
 					}
 					ajustarImagenes(OBJ);
 					break;
@@ -388,13 +392,13 @@
 			OBJ.data("swapH", OBJ.data("opciones").height);
 			OBJ.data("opciones").width = $(window).width();
 			OBJ.data("opciones").height = $(window).height();
-							
+			$("#RTfscreen").css("background-image", "url('" + fscreenIcon[1] + "')");
 			ajustarImagenes(OBJ);
 		});
 		$(document).bind("fscreenclose", function(e){
 			OBJ.data("opciones").width = OBJ.data("swapW");
 			OBJ.data("opciones").height = OBJ.data("swapH");
-							
+			$("#RTfscreen").css("background-image", "url('" + fscreenIcon[0] + "')");
 			ajustarImagenes(OBJ);
 		});
 		//ZOOMING
@@ -464,27 +468,13 @@
 			
 			if( (e.pageX >= offset.left + W - 40) )
 			{
-				if( OBJ.data("fullscreen") )
-				{
-					$.fullscreen.exit();
-					OBJ.data("fullscreen", false);
-					$("#ReadThisZOOM").addClass("hidden");
-				} else {
-					OBJ.fullscreen();
-					OBJ.data("fullscreen", true);
-					$("#ReadThisZOOM").addClass("hidden");
-				}
-			} else if( (e.pageX <= offset.left + 40) ) {
-				if( OBJ.data("opciones").zoom )
-				{
-					OBJ.data("opciones").zoom = false;
-					if( !$("#ReadThisZOOM").hasClass("hidden") )
-					{
-						$("#ReadThisZOOM").addClass("hidden");
-					}
-				} else {
-					OBJ.data("opciones").zoom = true;
-				}
+				OBJ.RTtoogleFS();
+			} else if( (e.pageX <= offset.left + 20) ) {
+				OBJ.RTzoomOut();
+			} else if( (e.pageX > offset.left + 20)&&(e.pageX <= offset.left + 60) ) {
+				OBJ.RTtoogleZOOM();
+			} else if( (e.pageX > offset.left + 60)&&(e.pageX <= offset.left + 80) ) {
+				OBJ.RTzoomIn();
 			}
 		});
 	}
@@ -493,10 +483,10 @@
 	{
 		var aux = OBJ.contents(".mostrar");
 		var W, H, id = aux.first().attr("id");
-		var rate = OBJ.data("opciones").zoomlvl/100;
+		var rate = OBJ.data("zoomlvl")/100;
 		var RTZ1, RTZ2;
 		
-		if( OBJ.data("opciones").mode == "normal" )
+		if( OBJ.data("opciones").mode == "standard" )
 		{
 			RTZ1 = $("#RTZ1");
 			RTZ2 = $("#RTZ2");
@@ -563,7 +553,7 @@
 		});
 		$("#ReadThisPanel").append("<div id='RTfscreen'></div>");
 		$("#RTfscreen").css({
-			"background-image": "url('" + fscreenIcon + "')"
+			"background-image": "url('" + fscreenIcon[0] + "')"
 			,"background-size": "100%"
 			,"width": 32
 			,"height": 32
@@ -571,9 +561,19 @@
 			,"margin-right": 5
 			,"margin-top": 5
 		});
+		$("#ReadThisPanel").append("<div id='RTzoomOut'></div>");
+		$("#RTzoomOut").css({
+			"background-image": "url('" + zoomOutIcon + "')"
+			,"background-size": "100%"
+			,"width": 15
+			,"height": 15
+			,"float": "left"
+			,"margin-left": 5
+			,"margin-top": 5
+		});
 		$("#ReadThisPanel").append("<div id='RTzoom'></div>");
 		$("#RTzoom").css({
-			"background-image": "url('" + zoomIcon + "')"
+			"background-image": "url('" + zoomIcon[0] + "')"
 			,"background-size": "100%"
 			,"width": 32
 			,"height": 32
@@ -581,12 +581,12 @@
 			,"margin-left": 5
 			,"margin-top": 5
 		});
-		$("#ReadThisPanel").append("<div id='RTzoomlvl'></div>");
-		$("#RTzoomlvl").css({
-			"background-image": "url('" + zoomlvlIcon + "')"
+		$("#ReadThisPanel").append("<div id='RTzoomIn'></div>");
+		$("#RTzoomIn").css({
+			"background-image": "url('" + zoomInIcon + "')"
 			,"background-size": "100%"
-			,"width": 10
-			,"height": 32
+			,"width": 15
+			,"height": 15
 			,"float": "left"
 			,"margin-left": 5
 			,"margin-top": 5
@@ -677,4 +677,56 @@
 		$("#progbar span").css("width", ((this.data("pagActual")-1)/(this.data("cantPags")-1))* $("#progbar").width());
 		setUpZOOM(this);
 	};
+	$.fn.RTtoogleFS = function()
+	{
+		if( this.data("fullscreen") )
+		{
+			$.fullscreen.exit();
+			this.data("fullscreen", false);
+			$("#ReadThisZOOM").addClass("hidden");
+		} else {
+			this.fullscreen();
+			this.data("fullscreen", true);
+			$("#ReadThisZOOM").addClass("hidden");
+		}
+	}
+	$.fn.RTtoogleZOOM = function()
+	{
+		if( this.data("opciones").zoom )
+		{
+			this.data("opciones").zoom = false;
+			if( !$("#ReadThisZOOM").hasClass("hidden") )
+			{
+				$("#ReadThisZOOM").addClass("hidden");
+			}
+			$("#RTzoom").css("background-image", "url('" + zoomIcon[4] + "')");
+			$("#RTzoomOut").css("background-image", "url('" + zoomOutOffIcon + "')");
+			$("#RTzoomIn").css("background-image", "url('" + zoomInOffIcon + "')");
+		} else {
+			this.data("opciones").zoom = true;
+			$("#RTzoom").css("background-image", "url('" + zoomIcon[(this.data("zoomlvl") - 100)/50] + "')");
+			$("#RTzoomOut").css("background-image", "url('" + zoomOutIcon + "')");
+			$("#RTzoomIn").css("background-image", "url('" + zoomInIcon + "')");
+		}
+	}
+	$.fn.RTzoomOut = function()
+	{	
+		var zlvl = this.data("zoomlvl");
+		if( (zlvl > 100)&&(this.data("opciones").zoom) )
+		{
+			this.data("zoomlvl", zlvl - 50);
+			$("#RTzoom").css("background-image", "url('" + zoomIcon[(this.data("zoomlvl") - 100)/50] + "')");
+			setUpZOOM(this);
+		}
+	}
+	$.fn.RTzoomIn = function()
+	{
+		var zlvl = this.data("zoomlvl");
+		if( (zlvl < 250)&&(this.data("opciones").zoom) )
+		{
+			this.data("zoomlvl", zlvl + 50);
+			$("#RTzoom").css("background-image", "url('" + zoomIcon[(this.data("zoomlvl") - 100)/50] + "')");
+			setUpZOOM(this);
+		}
+	}
 }( jQuery ));
