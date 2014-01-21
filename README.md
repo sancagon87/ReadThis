@@ -48,4 +48,5 @@ KEYBINDINGS:
 	- Zoom level x1.5: "2"
 	- Zoom level x2: "3"
 	- Zoom level x2.5: "4"
+	- Reading Mode (Standard/Manga): "M"
 
