@@ -41,17 +41,27 @@
 		});
 
 		var OBJ = this;		
-		preCargar(this);
+		
 		
 		//ZOOM DIV
 		this.append("<div id='ReadThisZOOM' class='hidden' style='background-color:rgb(0,0,0);'><div id='RTZhitbox'></div><div id='RTZ1'></div><div id='RTZ2'></div></div>");
 		//PANEL DE CONTROL DIV
 		this.append("<div id='ReadThisPanel'></div>");
 		//loading display
-		this.append("<div id='ReadThisLoader' style='position:absolute; background-color:#000;'><div id='RTLoutput'><p style='color:white; text-align:center; font-size: 20px; font-weight: bold;'></p><img src='" + loadingURL + "'></img></div></div>");		
-		setUpLoader(this);
-		this.data("porcentage", 0);
-		this.data("timer", setInterval(function(){loader(OBJ);}, 200));
+		this.append("<div id='ReadThisLoader' style='position:absolute; background-color:#000;'><div id='RTLoutput'><p style='color:white; text-align:center; font-size: 20px; font-weight: bold;'></p></div></div>");		
+		var loadingGif = new Image();
+		
+		$(loadingGif).load(function(){
+			$("#RTLoutput").append("<img src='" + loadingURL + "'></img>");
+			setUpLoader(OBJ);
+			preCargar(OBJ);
+			OBJ.data("porcentage", 0);
+			OBJ.data("timer", setInterval(function(){loader(OBJ);}, 200));
+		}).attr({
+			src: loadingURL
+		}).error(function(){
+			alert("Error! No se puede cargar una imagen! Recargar la pagina!");
+		});			
 		
 	};
 	function setUpLoader(OBJ)

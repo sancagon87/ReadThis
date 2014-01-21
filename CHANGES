@@ -16,3 +16,5 @@ v0.5 - Se implementa sistema de ZOOM (hotkeys provisorias: "1" = x1, "2" = x150,
 v1.0a - Primera version funcional del plugin (Aplpha).
 		Se implementa barra de progreso en el panel de control
 		Se implementa el cambio de modo de lectura (normal y manga), hotkey: "m"
+
+proximo - Se arregla el gif de carga (ahora la carga comienza una vez se carga el gif)
