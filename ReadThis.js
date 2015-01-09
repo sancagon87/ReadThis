@@ -4,6 +4,7 @@
 (function ( $ ) {
 	var loadingURL = "http://imageshack.com/a/img801/8726/zt.gif";
 	var rellenoURL = "img/blank.png";
+	var errorURL = "img/error.png";
 	var fscreenIcon = ["http://imageshack.com/a/img854/2462/ezam.png", "http://imageshack.com/a/img836/8787/uw7v.png"];
 	var zoomIcon = ["http://imageshack.com/a/img837/4233/7pwk.png", "http://imageshack.com/a/img819/8431/lbzu.png", "http://imageshack.com/a/img837/8485/a0xs.png", "http://imageshack.com/a/img268/8585/t970.png", "http://imageshack.com/a/img811/4599/su6h.png"];
 	var zoomOutIcon = "http://imageshack.com/a/img707/7807/310x.png";
@@ -16,7 +17,7 @@
 	
 	$.fn.ReadThis = function(op) 
 	{
-		$("head").append("<style> .rt_hidden{ display: none !important; visibility: hidden; z-index: -1;} .derecha, .relleno, .doble, .izquierda, .single, #ReadThisZOOM{ position: absolute; -moz-user-select: none; -khtml-user-select: none; -webkit-user-select: none; -o-user-select: none;} .relleno{background-image:url('" + rellenoURL + "'); background.size:100%;}</style>");
+		$("head").append("<style> .rt_hidden{ display: none !important; visibility: hidden; z-index: -1;} .derecha, .relleno, .doble, .izquierda, .single, #ReadThisZOOM{ position: absolute; -moz-user-select: none; -khtml-user-select: none; -webkit-user-select: none; -o-user-select: none;} .relleno{background-image:url('" + rellenoURL + "'); background.size:100%;}.relleno.error{background-image:url('" + errorURL + "'); background.size:100%;}</style>");
 		
 		var opciones = $.extend({
 			//default
@@ -149,26 +150,25 @@
 		for( var i = 0; i < largo; i++ )
 		{
 			img[i] = new Image();
-			j = i;
+
 			$(img[i]).load(function(){
 				OBJ.data("porcentage", OBJ.data("porcentage") + 1);
 			}).attr({
 				src: OBJ.data("opciones").array[i]
 			}).error(function(){
-				OBJ.data("errores").push(OBJ.data("opciones").array[j])
+				OBJ.data("errores").push($(this).attr("src"));
 			});
 		}
 		for( var i = 0; i < largoIconos; i++)
 		{
 			iconosImg[i] = new Image();
-			var h = i;
 
 			$(iconosImg[i]).load(function(){
 				OBJ.data("porcentage", OBJ.data("porcentage") + 1);
 			}).attr({
 				src: iconos[i]
 			}).error(function(){
-				OBJ.data("errores").push(OBJ.data("opciones").array[h]);
+				OBJ.data("errores").push($(this).attr("src"));
 			});
 		}
 		OBJ.data("imagenes", img);
@@ -234,7 +234,13 @@
 			{
 				largos[i] = "doble";
 			} else {
-				largos[i] = "normal";
+
+				if( OBJ.data("imagenes")[i].width == 0 )
+				{
+					largos[i] = "error";
+				} else {
+					largos[i] = "normal";
+				}
 			}
 		}
 		//CREAR DIVS CORRESPONDIENTES
@@ -272,12 +278,20 @@
 				derecha = true;
 				OBJ.append("<div id='" + i + "' class='izquierda rt_hidden'></div>");
 			}
-			$("#" + i).css({
-				"width":OBJ.data("imagenes")[i].width
-				,"heigth":OBJ.data("imagenes")[i].height
-				,"background-image":"url('" + OBJ.data("imagenes")[i].src + "')"
-				,"background-size":"100%"
-			});
+			if( largos[i] != "error" )
+			{
+				$("#" + i).css({
+					"width":OBJ.data("imagenes")[i].width
+					,"heigth":OBJ.data("imagenes")[i].height
+					,"background-image": "url('" + OBJ.data("imagenes")[i].src + "')"
+					,"background-size":"100%"
+
+				});
+			} else {
+				$("#" + i).addClass("error");
+				$("#" + i).addClass("relleno");
+			}
+			
 		}
 
 		OBJ.contents("#0").removeClass("rt_hidden");
@@ -307,9 +321,17 @@
 				aux.css({"width":auxW1.w,"height":auxW1.h});
 				d++;
 				i++;
+
 			} else if( (aux.hasClass("izquierda")) ){
-				auxW1 = optimizarTamano(W, H, OBJ.data("imagenes")[i].width, OBJ.data("imagenes")[i].height);
-				if( aux.next().hasClass("relleno") )
+
+				if(OBJ.data("imagenes")[i].width > 0)
+				{
+					auxW1 = optimizarTamano(W, H, OBJ.data("imagenes")[i].width, OBJ.data("imagenes")[i].height);
+				} else {
+					auxW1 = {w:H*0.8, h:H};
+				}
+
+				if( aux.next().hasClass("relleno"))
 				{
 					aux.next().css("width", W/2);
 					aux.next().css("height", H);
@@ -328,7 +350,8 @@
 					auxW1 = {w:W/2, h:H};
 					auxW2 = {w:W/2, h:H};
 				}
-				aux.css({"width":auxW1.w, "height":auxW1.h});
+				
+				aux.css({"width":auxW1.w, "height":auxW1.h});	
 				aux.next().css({"width":auxW2.w, "height":auxW2.h});
 				
 				i++;
@@ -1110,377 +1133,7 @@
 			}});
 		}
 	}
-
-	function FlipAnimate3( actual, dir )
-	{
-		actual.parent().data("animando", true);
-		resetAnimation();
-		
-		var ancho = actual.css("width");
-		var alto = actual.css("height");
-		var offset = actual.parent().data("opciones").width/2;
-		var izquierda = actual.hasClass("izquierda");
-		var url = actual.css("background-image");
-		var proximo;
-		var manga = actual.parent().data("opciones").mode == "manga";
-
-		$("#flipFXsale").removeClass("rt_hidden");
-		$("#flipFXentra").removeClass("rt_hidden");
-		
-		if( (dir == "derecha")&&(!manga) || (dir == "izquierda")&&(manga) )
-		{
-
-			if( actual.hasClass("doble") )
-			{
-				$("#flipFXsale").css({
-					"width": parseInt(ancho)/2 + "px"
-					,"height": alto
-					,"left": offset
-					,"right": ""
-				});
-				$("#flipFXsale div").css({
-					"width": ancho
-					,"height": alto
-					,"background-image": url
-					,"right": ""
-					,"left": -parseInt(ancho)/2 + "px"
-				});
-				ancho = parseInt(ancho)/2 + "px";
-			} else {
-
-				$("#flipFXsale").css({
-					"width": ancho
-					,"height": alto
-					,"left": offset
-					,"right": ""
-				});
-				$("#flipFXsale div").css({
-					"width": ancho
-					,"height": alto
-					,"background-image": url
-					,"right": ""
-					,"left": ""
-				});
-			}
-
-			aux = actual.parent().contents(".mostrar").first();
-			if( manga ) 
-			{
-				proximo = actual.parent().contents(".proximo").last();
-				actual.parent().contents(".proximo").first().removeClass("rt_hidden");
-				if( actual.hasClass("doble") ) {
-					actual.parent().contents(".proximo").first().css("z-index", 9);
-				}
-			} else {
-				proximo = actual.parent().contents(".proximo").first();
-				actual.parent().contents(".proximo").last().removeClass("rt_hidden");
-				if( !actual.hasClass("doble")&&actual.attr("id") != "0" )
-				{
-					aux.css("z-index", 10);
-				}
-			}
-
-			ancho = proximo.css("width");
-			alto = proximo.css("height");
-			if(!actual.hasClass("doble")) {
-				offset2 = parseInt(actual.css("left")) - actual.width();
-			} else {
-				offset2 = parseInt(actual.css("left"));
-			}
-			url = proximo.css("background-image");
-
-			if( proximo.hasClass("doble") )
-			{
-				$("#flipFXentra").css({
-					"width": 0
-					,"height": alto
-					,"right": offset2
-					,"left": ""
-				});
-				$("#flipFXentra div").css({
-					"width": ancho
-					,"height": alto
-					,"background-image": url
-					,"right": ""
-					,"left": ""
-				});
-				ancho = parseInt(ancho)/2 + "px";
-			} else {
-
-				$("#flipFXentra").css({
-					"width": 0
-					,"height": alto
-					,"right": offset2
-					,"left": ""
-				});
-				$("#flipFXentra div").css({
-					"width": ancho
-					,"height": alto
-					,"background-image": url
-					,"right": ""
-					,"left": ""
-				});
-			}
-
-		} else if( (dir == "izquierda")&&(!manga) || (dir == "derecha")&&(manga) ) {
-
-			if( actual.hasClass("doble") )
-			{
-				$("#flipFXsale").css({
-					"width": parseInt(ancho)/2 + "px"
-					,"height": alto
-					,"right": offset
-					,"left": ""
-				});
-				$("#flipFXsale div").css({
-					"width": ancho
-					,"height": alto
-					,"background-image": url
-					,"right": -parseInt(ancho)/2 + "px"
-					,"left": ""
-				});
-
-				ancho = parseInt(ancho)/2 + "px";
-			} else {
-				$("#flipFXsale").css({
-					"width": ancho
-					,"height": alto
-					,"right": offset
-					,"left": ""
-				});
-				$("#flipFXsale div").css({
-					"width": ancho
-					,"height": alto
-					,"background-image": url
-					,"right":0
-					,"left": ""
-				});
-			}
-			aux = actual.parent().contents(".mostrar").first();
-			if( manga ) 
-			{
-				proximo = actual.parent().contents(".proximo").first();
-				actual.parent().contents(".proximo").last().removeClass("rt_hidden");
-				if( !actual.hasClass("doble")&&actual.attr("id") != "0" )
-				{
-					aux.css("z-index", 10);
-				}
-			} else {
-				proximo = actual.parent().contents(".proximo").last();
-				actual.parent().contents(".proximo").first().removeClass("rt_hidden");
-				if( actual.hasClass("doble") ) {
-					actual.parent().contents(".proximo").first().css("z-index", 9);
-				}
-			}
-			
-			ancho = proximo.css("width");
-			alto = proximo.css("height");
-			if(!actual.hasClass("doble")) {
-				offset2 = parseInt(actual.css("right")) - actual.width();
-			} else {
-				offset2 = parseInt(actual.css("left"));
-			}
-			url = proximo.css("background-image");
-
-			if( proximo.hasClass("doble") )
-			{
-				$("#flipFXentra").css({
-					"width": 0
-					,"height": alto
-					,"left": offset2
-					,"right": ""
-				});
-				$("#flipFXentra div").css({
-					"width": ancho
-					,"height": alto
-					,"background-image": url
-					,"right": 0
-					,"left": ""
-				});
-				ancho = parseInt(ancho)/2 + "px";
-			} else {
-				$("#flipFXentra").css({
-					"width": 0
-					,"height": alto
-					,"left": offset2
-					,"right": ""
-				});
-				$("#flipFXentra div").css({
-					"width": ancho
-					,"height": alto
-					,"background-image": url
-					,"right":0
-					,"left": ""
-				});
-			}
-		}
-		
-		if( !actual.hasClass("doble"))
-		{
-			actual.addClass("rt_hidden");
-			actual.removeClass("mostrar");
-		}
-
-		if( (dir == "derecha")&&(!manga) || (dir == "izquierda")&&(manga) )
-		{
-			$("#flipFXsale").animate({ width: "0" }, {duration: 1000, queue: false, complete: function(){  
-				$(this).addClass("rt_hidden");
-			}});
-			$("#flipFXentra").animate({ width: ancho, right: offset }, {duration: 1000, queue: false, complete: function(){
-				if( actual.attr("id") != "0" )
-				{
-					aux.css("z-index", 0);
-				}
-				actual.parent().contents(".mostrar").each(function(){$(this).addClass("rt_hidden"); $(this).removeClass("mostrar");});
-				actual.parent().contents(".proximo").each(function(){$(this).addClass("mostrar");});
-				actual.parent().contents(".proximo").each(function(){$(this).removeClass("rt_hidden"); $(this).removeClass("proximo");});
-				$(this).addClass("rt_hidden");
-				actual.parent().data("animando", false);
-			}});
-		} else if( (dir == "izquierda")&&(!manga) || (dir == "derecha")&&(manga) ) {
-			$("#flipFXsale").animate({ width: "0" }, {duration: 1000, queue: false, complete: function(){
-				$(this).addClass("rt_hidden");
-			}});
-			$("#flipFXentra").animate({ width: ancho, left: offset }, {duration: 1000, queue: false, complete: function(){
-				if( actual.attr("id") != "0" )
-				{
-					aux.css("z-index", 0);
-				}
-				actual.parent().contents(".mostrar").each(function(){$(this).addClass("rt_hidden"); $(this).removeClass("mostrar");});
-				actual.parent().contents(".proximo").each(function(){$(this).addClass("mostrar");});
-				actual.parent().contents(".proximo").each(function(){$(this).removeClass("rt_hidden"); $(this).removeClass("proximo");});
-				$(this).addClass("rt_hidden");
-				actual.parent().data("animando", false);
-			}});
-		}
-	}
-
-	function FlipAnimate2( actual, dir )
-	{
-		actual.parent().data("animando", true);
-		resetAnimation();
-		
-		var ancho = actual.css("width");
-		var alto = actual.css("height");
-		var offset = actual.parent().data("opciones").width/2;
-		var izquierda = actual.hasClass("izquierda");
-		var url = actual.css("background-image");
-		
-		$("#flipFXsale").removeClass("rt_hidden");
-		$("#flipFXentra").removeClass("rt_hidden");
-		
-		if( actual.hasClass("doble") )
-		{
-			$("#flipFXsale").css({
-				"width": parseInt(ancho)/2
-				,"height": alto
-				,"left": offset
-				,"right": ""
-			});
-			$("#flipFXsale div").css({
-				"width": ancho
-				,"height": alto
-				,"background-image": url
-				,"right": parseInt(ancho)/2
-			});
-		} else {
-			$("#flipFXsale").css({
-				"width": ancho
-				,"height": alto
-				,"left": offset
-			});
-			$("#flipFXsale div").css({
-				"width": ancho
-				,"height": alto
-				,"background-image": url
-			});
-		}
-		
-		var proximo;
-		aux = actual.parent().contents(".mostrar").first();
-		
-		if( dir == "derecha" )
-		{
-			if( actual.attr("id") != "0" )
-			{
-				aux.css("z-index", 10);
-			}
-			proximo = actual.parent().contents(".proximo").first();
-			ancho = proximo.css("width");
-			alto = proximo.css("height");
-			offset2 = parseInt(actual.css("left")) - actual.width();
-			actual.parent().contents(".proximo").last().removeClass("rt_hidden");
-			url = proximo.css("background-image");
-		} else {
-			proximo = actual.parent().contents(".proximo").last();
-			ancho = proximo.css("width");
-			alto = proximo.css("height");
-			offset2 = parseInt(actual.css("right")) - actual.width();
-			actual.parent().contents(".proximo").first().removeClass("rt_hidden");
-			url = proximo.css("background-image");
-		}
-		
-		actual.addClass("rt_hidden");
-		actual.removeClass("mostrar");
-		
-		if( proximo.hasClass("doble") )
-		{
-			$("#flipFXentra").css({
-				"width": 0
-				,"height": alto
-				,"right": offset2
-			});
-			$("#flipFXentra div").css({
-				"width": ancho
-				,"height": alto
-				,"background-image": url
-			});
-			ancho = parseInt(ancho)/2;
-		} else {
-			$("#flipFXentra").css({
-				"width": 0
-				,"height": alto
-				,"right": offset2
-			});
-			$("#flipFXentra div").css({
-				"width": ancho
-				,"height": alto
-				,"background-image": url
-			});
-		}
-		if( dir == "derecha" )
-		{
-			$("#flipFXsale").animate({ width: "0" }, {duration: 1000, queue: false, complete: function(){  
-				$(this).addClass("rt_hidden");
-			}});
-			$("#flipFXentra").animate({ width: ancho, right: offset }, {duration: 1000, queue: false, complete: function(){
-				if( actual.attr("id") != "0" )
-				{
-					aux.css("z-index", 0);
-				}
-				actual.parent().contents(".mostrar").each(function(){$(this).addClass("rt_hidden"); $(this).removeClass("mostrar");});
-				actual.parent().contents(".proximo").each(function(){$(this).addClass("mostrar");});
-				actual.parent().contents(".proximo").each(function(){$(this).removeClass("rt_hidden"); $(this).removeClass("proximo");});
-				$(this).addClass("rt_hidden");
-				actual.parent().data("animando", false);
-			}});
-		} else {
-			$("#flipFXsale").animate({ width: "0" }, {duration: 1000, queue: false, complete: function(){
-				$(this).addClass("rt_hidden");
-			}});
-			//$("#flipFXentra").animate({ width: ancho, left: offset }, {duration: 1000, queue: false, complete: function(){
-				if( actual.attr("id") != "0" )
-				{
-					aux.css("z-index", 0);
-				}
-				actual.parent().contents(".mostrar").each(function(){$(this).addClass("rt_hidden"); $(this).removeClass("mostrar");});
-				actual.parent().contents(".proximo").each(function(){$(this).addClass("mostrar");});
-				actual.parent().contents(".proximo").each(function(){$(this).removeClass("rt_hidden"); $(this).removeClass("proximo");});
-				$(this).addClass("rt_hidden");
-				actual.parent().data("animando", false);
-			//}});
-		}
-	}
+	
 	function resetAnimation()
 	{
 	}

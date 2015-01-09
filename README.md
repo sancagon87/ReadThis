@@ -5,7 +5,7 @@ Simple Comic Reader JQUERY Plugin
 
 Requires: JQUERY, JQUERY.FULLSCREEN by Vladimir Zhuravlev (http://plugins.jquery.com/fullscreener/)
 
-WARNING!: The proyect is currently on Alpha release stage. Bugs are to be expected.
+WARNING!: The proyect is in working progress. An alpha working version can be found on the release folder.
 
 USAGE: $("#ReadThis").ReadThis(options);
 

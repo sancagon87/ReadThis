@@ -18,7 +18,9 @@ v1.0a - First release (Aplpha).
 		Progress bar added to the control panel.
 		Reading mode implemented (standard/manga), hotkey: "m"
 
-		
+v1.1 - Implemented an animation effect when flipping pages (optional)
+
+	
 ESPAÑOL
 v0.2 - Se implementa la funcion para cambiar de paginas hacia adelante y hacia atras, haciendo click sobre el viewport.
 
@@ -40,3 +42,6 @@ v1.0a - Primera version funcional del plugin (Aplpha).
 		Se implementa el cambio de modo de lectura (normal y manga), hotkey: "m"
 
 proximo - Se arregla el gif de carga (ahora la carga comienza una vez se carga el gif)
+
+v1.1 - Se implementa una animación de cambio de páginas (opcional)
+
