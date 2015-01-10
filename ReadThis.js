@@ -572,6 +572,8 @@
 				}
 			}
 			
+			} else {
+				$("#ReadThisZOOM").addClass("rt_hidden");
 			}
 		});
 		$("#ReadThisZOOM").mouseout(function(e){
@@ -627,7 +629,7 @@
 		});
 		W = OBJ.data("imagenes")[id].width*rate;
 		H = OBJ.data("imagenes")[id].height*rate;
-		if( !(aux.first().hasClass("doble") || (OBJ.data("opciones").pages == "single") || aux.first().hasClass("derecha")) && !aux.last().hasClass("relleno") )
+		if( !(aux.first().hasClass("doble") || (OBJ.data("opciones").pages == "single") || aux.first().hasClass("derecha") || aux.length == 1) && !aux.last().hasClass("relleno")  )
 		{
 				//RTZ2
 				id = aux.last().attr("id");
@@ -646,6 +648,7 @@
 					,"height": 0
 				});
 		}
+
 		$("#ReadThisZOOM").css({
 				"width": W
 				,"height": H
@@ -879,6 +882,7 @@
 
 	function FlipAnimate( actual, dir )
 	{
+		$("#ReadThisZOOM").addClass("rt_hidden");
 		actual.parent().data("animando", true);
 		resetAnimation();
 		
@@ -900,10 +904,18 @@
 		if( (dir == "derecha")&&(!manga) || (dir == "izquierda")&&(manga) )
 		{
 
-			//si no es la penultima y la proxima no son dos y no es doble
-			if( (actual.parent().contents(".proximo").last().next().length == 0)&&(actual.parent().contents(".proximo").length == 1)&&(!actual.parent().contents(".proximo").last().hasClass("doble"))&&(!actual.hasClass("doble")) )
+			//si es la penultima y la proxima no son dos y no es doble
+			if( manga ) 
 			{
-				$("#flipFXaux").addClass("rt_hidden");
+				if( (actual.parent().contents(".proximo").first().attr("id") == "0")&&(actual.parent().contents(".proximo").length == 1)&&(!actual.parent().contents(".proximo").last().hasClass("doble"))&&(!actual.hasClass("doble")) )
+				{
+					$("#flipFXaux").addClass("rt_hidden");
+				}
+			} else {
+				if( (actual.parent().contents(".proximo").last().next().length == 0)&&(actual.parent().contents(".proximo").length == 1)&&(!actual.parent().contents(".proximo").last().hasClass("doble"))&&(!actual.hasClass("doble")) )
+				{
+					$("#flipFXaux").addClass("rt_hidden");
+				}
 			}
 			if( actual.hasClass("doble") )
 			{
@@ -1030,21 +1042,37 @@
 					,"left": ""
 				});
 
-				if( (actual.parent().contents(".proximo").last().next().length == 0)&&(actual.parent().contents(".proximo").length == 1)&&(!actual.parent().contents(".proximo").last().hasClass("doble"))&&(actual.hasClass("doble")) )
+				if( manga )
 				{
-					$("#flipFXaux").css("width", offset);
-					$("#flipFXaux div").css("background-image", "");
+					if( (actual.parent().contents(".proximo").first().attr("id") == "0")&&(actual.parent().contents(".proximo").length == 1)&&(!actual.parent().contents(".proximo").last().hasClass("doble"))&&(actual.hasClass("doble")) )
+					{
+						$("#flipFXaux").css("width", offset);
+						$("#flipFXaux div").css("background-image", "");
+					}
+				} else {
+					if( (actual.parent().contents(".proximo").last().next().length == 0)&&(actual.parent().contents(".proximo").length == 1)&&(!actual.parent().contents(".proximo").last().hasClass("doble"))&&(actual.hasClass("doble")) )
+					{
+						$("#flipFXaux").css("width", offset);
+						$("#flipFXaux div").css("background-image", "");
+					}
 				}
 			}
 
 
 		} else if( (dir == "izquierda")&&(!manga) || (dir == "derecha")&&(manga) ) {
 
-			if( (actual.parent().contents(".proximo").first().attr("id") == "0")&&(actual.parent().contents(".proximo").length == 1)&&(!actual.parent().contents(".proximo").last().hasClass("doble"))&&(!actual.hasClass("doble")) )
+			if( manga ) 
 			{
-				$("#flipFXaux").addClass("rt_hidden");
+				if( (actual.parent().contents(".proximo").last().next().length == 0)&&(actual.parent().contents(".proximo").length == 1)&&(!actual.parent().contents(".proximo").last().hasClass("doble"))&&(!actual.hasClass("doble")) )
+				{
+					$("#flipFXaux").addClass("rt_hidden");
+				}
+			} else {
+				if( (actual.parent().contents(".proximo").first().attr("id") == "0")&&(actual.parent().contents(".proximo").length == 1)&&(!actual.parent().contents(".proximo").last().hasClass("doble"))&&(!actual.hasClass("doble")) )
+				{
+					$("#flipFXaux").addClass("rt_hidden");
+				}
 			}
-
 			if( actual.hasClass("doble") )
 			{
 				$("#flipFXsale").css({
@@ -1166,10 +1194,19 @@
 					,"left": ""
 				});
 
-				if( (actual.parent().contents(".proximo").first().attr("id") == "0")&&(actual.parent().contents(".proximo").length == 1)&&(!actual.parent().contents(".proximo").last().hasClass("doble"))&&(actual.hasClass("doble")) )
+				if( manga )
 				{
-					$("#flipFXaux").css("width", offset);
-					$("#flipFXaux div").css("background-image", "");
+					if( (actual.parent().contents(".proximo").last().next().length == 0)&&(actual.parent().contents(".proximo").length == 1)&&(!actual.parent().contents(".proximo").last().hasClass("doble"))&&(actual.hasClass("doble")) )
+					{
+						$("#flipFXaux").css("width", offset);
+						$("#flipFXaux div").css("background-image", "");
+					}
+				} else {
+					if( (actual.parent().contents(".proximo").first().attr("id") == "0")&&(actual.parent().contents(".proximo").length == 1)&&(!actual.parent().contents(".proximo").last().hasClass("doble"))&&(actual.hasClass("doble")) )
+					{
+						$("#flipFXaux").css("width", offset);
+						$("#flipFXaux div").css("background-image", "");
+					}
 				}
 			}
 		}
@@ -1212,6 +1249,7 @@
 				$("#flipFXaux div").css("background-size", "100%");
 				$(this).find("div").css("background-size", "100%");
 				actual.parent().data("animando", false);
+				setUpZOOM(actual.parent());
 			}});
 		} else if( (dir == "izquierda")&&(!manga) || (dir == "derecha")&&(manga) ) {
 			$("#flipFXsale").animate({ width: "0" }, {duration: 1000, queue: false, complete: function(){
@@ -1231,6 +1269,7 @@
 				$("#flipFXaux div").css("background-size", "100%");
 				$(this).find("div").css("background-size", "100%");
 				actual.parent().data("animando", false);
+				setUpZOOM(actual.parent());
 			}});
 		}
 	}
