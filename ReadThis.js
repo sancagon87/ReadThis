@@ -53,7 +53,7 @@
 		//PANEL DE CONTROL DIV
 		this.append("<div id='ReadThisPanel'></div>");
 		//FLIP EFECTO
-		this.prepend("<div id='flipFXentra' style='position:absolute; overflow:hidden; z-index:11;'><div style='position:absolute;background-size:100%;'></div></div><div id='flipFXsale' style='position:absolute; overflow:hidden;  z-index:10;'><div style='position:absolute;background-size:100%;'></div></div>");
+		this.prepend("<div id='flipFXentra' style='position:absolute; overflow:hidden; z-index:11;'><div style='position:absolute;background-size:100%;'></div></div><div id='flipFXsale' style='position:absolute; overflow:hidden;  z-index:10;'><div style='position:absolute;background-size:100%;'></div></div><div id='flipFXaux' style='position:absolute; overflow:hidden;  z-index:9;'><div style='position:absolute;background-size:100%;'></div></div>");
 		//loading display
 		this.append("<div id='ReadThisLoader' style='position:absolute; background-color:#000;'><div id='RTLoutput'><p style='color:white; text-align:center; font-size: 20px; font-weight: bold;'></p></div></div>");				
 		var loadingGif = new Image();
@@ -892,10 +892,19 @@
 
 		$("#flipFXsale").removeClass("rt_hidden");
 		$("#flipFXentra").removeClass("rt_hidden");
+		$("#flipFXaux").removeClass("rt_hidden");
+		$("#flipFXaux").css("background-color", actual.parent().data("opciones").backround_color);
+		
+		
 
 		if( (dir == "derecha")&&(!manga) || (dir == "izquierda")&&(manga) )
 		{
 
+			//si no es la penultima y la proxima no son dos y no es doble
+			if( (actual.parent().contents(".proximo").last().next().length == 0)&&(actual.parent().contents(".proximo").length == 1)&&(!actual.parent().contents(".proximo").last().hasClass("doble"))&&(!actual.hasClass("doble")) )
+			{
+				$("#flipFXaux").addClass("rt_hidden");
+			}
 			if( actual.hasClass("doble") )
 			{
 				$("#flipFXsale").css({
@@ -933,27 +942,31 @@
 			if( manga ) 
 			{
 				proximo = actual.parent().contents(".proximo").last();
-				actual.parent().contents(".proximo").first().removeClass("rt_hidden");
-				if( actual.hasClass("doble") ) {
+				proximo2 = actual.parent().contents(".proximo").first();
+				/*if( actual.hasClass("doble") ) {
 					actual.parent().contents(".proximo").first().css("z-index", 9);
-				}
+				}*/
 			} else {
 				proximo = actual.parent().contents(".proximo").first();
-				actual.parent().contents(".proximo").last().removeClass("rt_hidden");
+				proximo2 = actual.parent().contents(".proximo").last();
+				/*
 				if( !actual.hasClass("doble")&&actual.attr("id") != "0" )
 				{
 					aux.css("z-index", 10);
-				}
+				}*/
 			}
 
 			ancho = proximo.css("width");
+			ancho2 = proximo2.css("width");
 			alto = proximo.css("height");
+			alto2 = proximo2.css("height");
 			if(!actual.hasClass("doble")) {
 				offset2 = parseInt(actual.css("left")) - actual.width();
 			} else {
 				offset2 = parseInt(actual.css("left"));
 			}
 			url = proximo.css("background-image");
+			url2 = proximo2.css("background-image");
 
 			if( proximo.hasClass("doble") )
 			{
@@ -963,6 +976,7 @@
 					,"right": offset2
 					,"left": ""
 				});
+
 				$("#flipFXentra div").css({
 					"width": ancho
 					,"height": alto
@@ -970,6 +984,21 @@
 					,"right": ""
 					,"left": ""
 				});
+
+				$("#flipFXaux").css({
+					"width": parseInt(ancho)/2 + "px"
+					,"height": alto
+					,"right": ""
+					,"left": offset
+				});
+				$("#flipFXaux div").css({
+					"width": ancho
+					,"height": alto
+					,"background-image": url
+					,"right": 0
+					,"left": ""
+				});
+
 				ancho = parseInt(ancho)/2 + "px";
 			} else {
 
@@ -986,9 +1015,35 @@
 					,"right": ""
 					,"left": ""
 				});
+
+				$("#flipFXaux").css({
+					"width": ancho2
+					,"height": alto2
+					,"right": ""
+					,"left": offset
+				});
+				$("#flipFXaux div").css({
+					"width": ancho2
+					,"height": alto2
+					,"background-image": url2
+					,"right": 0
+					,"left": ""
+				});
+
+				if( (actual.parent().contents(".proximo").last().next().length == 0)&&(actual.parent().contents(".proximo").length == 1)&&(!actual.parent().contents(".proximo").last().hasClass("doble"))&&(actual.hasClass("doble")) )
+				{
+					$("#flipFXaux").css("width", offset);
+					$("#flipFXaux div").css("background-image", "");
+				}
 			}
 
+
 		} else if( (dir == "izquierda")&&(!manga) || (dir == "derecha")&&(manga) ) {
+
+			if( (actual.parent().contents(".proximo").first().attr("id") == "0")&&(actual.parent().contents(".proximo").length == 1)&&(!actual.parent().contents(".proximo").last().hasClass("doble"))&&(!actual.hasClass("doble")) )
+			{
+				$("#flipFXaux").addClass("rt_hidden");
+			}
 
 			if( actual.hasClass("doble") )
 			{
@@ -1026,27 +1081,30 @@
 			if( manga ) 
 			{
 				proximo = actual.parent().contents(".proximo").first();
-				actual.parent().contents(".proximo").last().removeClass("rt_hidden");
-				if( !actual.hasClass("doble")&&actual.attr("id") != "0" )
+				proximo2 = actual.parent().contents(".proximo").last();
+				/*if( !actual.hasClass("doble")&&actual.attr("id") != "0" )
 				{
 					aux.css("z-index", 10);
-				}
+				}*/
 			} else {
 				proximo = actual.parent().contents(".proximo").last();
-				actual.parent().contents(".proximo").first().removeClass("rt_hidden");
-				if( actual.hasClass("doble") ) {
+				proximo2 = actual.parent().contents(".proximo").first();
+				/*if( actual.hasClass("doble") ) {
 					actual.parent().contents(".proximo").first().css("z-index", 9);
-				}
+				}*/
 			}
 			
 			ancho = proximo.css("width");
+			ancho2 = proximo2.css("width");
 			alto = proximo.css("height");
+			alto2 = proximo2.css("height");
 			if(!actual.hasClass("doble")) {
 				offset2 = parseInt(actual.css("right")) - actual.width();
 			} else {
 				offset2 = parseInt(actual.css("left"));
 			}
 			url = proximo.css("background-image");
+			url2 = proximo2.css("background-image");
 
 			if( proximo.hasClass("doble") )
 			{
@@ -1063,6 +1121,21 @@
 					,"right": 0
 					,"left": ""
 				});
+
+				$("#flipFXaux").css({
+					"width": parseInt(ancho)/2 + "px"
+					,"height": alto
+					,"right": offset
+					,"left": ""
+				});
+				$("#flipFXaux div").css({
+					"width": ancho
+					,"height": alto
+					,"background-image": url2
+					,"right": ""
+					,"left": 0
+				});
+
 				ancho = parseInt(ancho)/2 + "px";
 			} else {
 				$("#flipFXentra").css({
@@ -1078,6 +1151,26 @@
 					,"right":0
 					,"left": ""
 				});
+
+				$("#flipFXaux").css({
+					"width": ancho2
+					,"height": alto2
+					,"right": offset
+					,"left": ""
+				});
+				$("#flipFXaux div").css({
+					"width": ancho2
+					,"height": alto2
+					,"background-image": url2
+					,"right": 0
+					,"left": ""
+				});
+
+				if( (actual.parent().contents(".proximo").first().attr("id") == "0")&&(actual.parent().contents(".proximo").length == 1)&&(!actual.parent().contents(".proximo").last().hasClass("doble"))&&(actual.hasClass("doble")) )
+				{
+					$("#flipFXaux").css("width", offset);
+					$("#flipFXaux div").css("background-image", "");
+				}
 			}
 		}
 		
@@ -1096,6 +1189,10 @@
 			$("#flipFXentra div").css("background-size", "auto");
 		}
 
+		if( proximo2.hasClass("relleno") ){
+			$("#flipFXaux div").css("background-size", "auto");
+		}
+
 		if( (dir == "derecha")&&(!manga) || (dir == "izquierda")&&(manga) )
 		{
 			$("#flipFXsale").animate({ width: "0" }, {duration: 1000, queue: false, complete: function(){  
@@ -1111,12 +1208,15 @@
 				actual.parent().contents(".proximo").each(function(){$(this).addClass("mostrar");});
 				actual.parent().contents(".proximo").each(function(){$(this).removeClass("rt_hidden"); $(this).removeClass("proximo");});
 				$(this).addClass("rt_hidden");
+				$("#flipFXaux").addClass("rt_hidden");
+				$("#flipFXaux div").css("background-size", "100%");
 				$(this).find("div").css("background-size", "100%");
 				actual.parent().data("animando", false);
 			}});
 		} else if( (dir == "izquierda")&&(!manga) || (dir == "derecha")&&(manga) ) {
 			$("#flipFXsale").animate({ width: "0" }, {duration: 1000, queue: false, complete: function(){
 				$(this).addClass("rt_hidden");
+				$("#flipFXaux").addClass("rt_hidden");
 				$(this).find("div").css("background-size", "100%");
 			}});
 			$("#flipFXentra").animate({ width: ancho, left: offset }, {duration: 1000, queue: false, complete: function(){
@@ -1128,6 +1228,7 @@
 				actual.parent().contents(".proximo").each(function(){$(this).addClass("mostrar");});
 				actual.parent().contents(".proximo").each(function(){$(this).removeClass("rt_hidden"); $(this).removeClass("proximo");});
 				$(this).addClass("rt_hidden");
+				$("#flipFXaux div").css("background-size", "100%");
 				$(this).find("div").css("background-size", "100%");
 				actual.parent().data("animando", false);
 			}});

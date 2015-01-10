@@ -19,8 +19,10 @@ v1.0a - First release (Aplpha).
 		Reading mode implemented (standard/manga), hotkey: "m"
 
 v1.1 - Implemented an animation effect when flipping pages (optional)
+		Added an icon to point manga mode state (on/off)
+		Blank pages background changed.
+		Option to handle loading errors added (retry/ignore)
 
-	
 ESPAÑOL
 v0.2 - Se implementa la funcion para cambiar de paginas hacia adelante y hacia atras, haciendo click sobre el viewport.
 
@@ -44,4 +46,6 @@ v1.0a - Primera version funcional del plugin (Aplpha).
 proximo - Se arregla el gif de carga (ahora la carga comienza una vez se carga el gif)
 
 v1.1 - Se implementa una animación de cambio de páginas (opcional)
-
+		Se agrega un icono para el modo manga, con estado on/off para señalar cuando está activado dicho modo.
+		Se cambia el fondo de las páginas de relleno.
+		Se implementa opcion para manejar errores de carga reintentar/ignorar
