@@ -29,8 +29,10 @@
 	var zoomInOffIcon = "img/zoomInOff.png";
 	var mangaIcon = "img/mangaIcon.png";
 	var mangaIconOff = "img/mangaIconOff.png";
-	var iconos = [loadingURL,rellenoURL,fscreenIcon[0],fscreenIcon[1],zoomIcon[0],zoomIcon[1],zoomIcon[2],zoomIcon[3],zoomIcon[4],zoomOutIcon,zoomInIcon,zoomOutOffIcon,zoomInOffIcon,mangaIcon,mangaIconOff];
 	*/
+	
+	var iconos = [loadingURL,rellenoURL,fscreenIcon[0],fscreenIcon[1],zoomIcon[0],zoomIcon[1],zoomIcon[2],zoomIcon[3],zoomIcon[4],zoomOutIcon,zoomInIcon,zoomOutOffIcon,zoomInOffIcon,mangaIcon,mangaIconOff];
+	
 	$.fn.ReadThis = function(op) 
 	{
 		$("head").append("<style> .rt_hidden{ display: none !important; visibility: hidden; z-index: -1;} .derecha, .relleno, .doble, .izquierda, .single, #ReadThisZOOM{ position: absolute; -moz-user-select: none; -khtml-user-select: none; -webkit-user-select: none; -o-user-select: none;} .relleno{background-image:url('" + rellenoURL + "'); background.size:100%;}.relleno.error{background-image:url('" + errorURL + "'); background.size:100%;}</style>");
