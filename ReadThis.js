@@ -2,19 +2,35 @@
 //https://github.com/sancagon87/ReadThis
 
 (function ( $ ) {
-	var loadingURL = "http://imageshack.com/a/img801/8726/zt.gif";
+
+	//IMAGENES REMOTAS
+	var loadingURL = "http://i1378.photobucket.com/albums/ah115/sancagon/loading_zpss8nscccw.gif";
+	var rellenoURL = "http://i1378.photobucket.com/albums/ah115/sancagon/blank_zpsd869e7c1.png";
+	var errorURL = "http://i1378.photobucket.com/albums/ah115/sancagon/error_zpsf9da4d15.png";
+	var fscreenIcon = ["http://i1378.photobucket.com/albums/ah115/sancagon/fscreenOnIcon_zps6fe10e56.png", "http://i1378.photobucket.com/albums/ah115/sancagon/fscreenOffIcon_zps1f2a9875.png"];
+	var zoomIcon = ["http://i1378.photobucket.com/albums/ah115/sancagon/zoomIconX1_zps85288d97.png", "http://i1378.photobucket.com/albums/ah115/sancagon/zoomIconX15_zpsbc53db56.png", "http://i1378.photobucket.com/albums/ah115/sancagon/zoomIconX2_zps10440e7b.png", "http://i1378.photobucket.com/albums/ah115/sancagon/zoomIconX25_zpsb140dd84.png", "http://i1378.photobucket.com/albums/ah115/sancagon/zoomIconOff_zpsfd5bed76.png"];
+	var zoomOutIcon = "http://i1378.photobucket.com/albums/ah115/sancagon/zoomOutIcon_zps783522fc.png";
+	var zoomInIcon = "http://i1378.photobucket.com/albums/ah115/sancagon/zoomInIcon_zpsd93d5f3b.png";
+	var zoomOutOffIcon = "http://i1378.photobucket.com/albums/ah115/sancagon/zoomOutOff_zps64975efb.png";
+	var zoomInOffIcon = "http://i1378.photobucket.com/albums/ah115/sancagon/zoomInOff_zps0722421d.png";
+	var mangaIcon = "http://i1378.photobucket.com/albums/ah115/sancagon/mangaIcon_zpsed22faa8.png";
+	var mangaIconOff = "http://i1378.photobucket.com/albums/ah115/sancagon/mangaIconOff_zps9c4ddc18.png";
+
+	/*
+	//IMAGENES LOCALES
+	var loadingURL = "img/loading.gif";
 	var rellenoURL = "img/blank.png";
 	var errorURL = "img/error.png";
-	var fscreenIcon = ["http://imageshack.com/a/img854/2462/ezam.png", "http://imageshack.com/a/img836/8787/uw7v.png"];
-	var zoomIcon = ["http://imageshack.com/a/img837/4233/7pwk.png", "http://imageshack.com/a/img819/8431/lbzu.png", "http://imageshack.com/a/img837/8485/a0xs.png", "http://imageshack.com/a/img268/8585/t970.png", "http://imageshack.com/a/img811/4599/su6h.png"];
-	var zoomOutIcon = "http://imageshack.com/a/img707/7807/310x.png";
-	var zoomInIcon = "http://imageshack.com/a/img35/492/ya18.png";
-	var zoomOutOffIcon = "http://imageshack.com/a/img17/4806/edn0.png";
-	var zoomInOffIcon = "http://imageshack.com/a/img819/4650/9wpq.png";
+	var fscreenIcon = ["img/fscreenOffIcon.png", "img/fscreenOffIcon.png"];
+	var zoomIcon = ["img/zoomIconX1.png", "img/zoomIconX1.5.png", "img/zoomIconX2.png", "img/zoomIconX2.5.png", "img/zoomIconOff.png"];
+	var zoomOutIcon = "img/zoomOutIcon.png";
+	var zoomInIcon = "img/zoomInIcon.png";
+	var zoomOutOffIcon = "img/zoomOutOff.png";
+	var zoomInOffIcon = "img/zoomInOff.png";
 	var mangaIcon = "img/mangaIcon.png";
 	var mangaIconOff = "img/mangaIconOff.png";
 	var iconos = [loadingURL,rellenoURL,fscreenIcon[0],fscreenIcon[1],zoomIcon[0],zoomIcon[1],zoomIcon[2],zoomIcon[3],zoomIcon[4],zoomOutIcon,zoomInIcon,zoomOutOffIcon,zoomInOffIcon,mangaIcon,mangaIconOff];
-	
+	*/
 	$.fn.ReadThis = function(op) 
 	{
 		$("head").append("<style> .rt_hidden{ display: none !important; visibility: hidden; z-index: -1;} .derecha, .relleno, .doble, .izquierda, .single, #ReadThisZOOM{ position: absolute; -moz-user-select: none; -khtml-user-select: none; -webkit-user-select: none; -o-user-select: none;} .relleno{background-image:url('" + rellenoURL + "'); background.size:100%;}.relleno.error{background-image:url('" + errorURL + "'); background.size:100%;}</style>");
